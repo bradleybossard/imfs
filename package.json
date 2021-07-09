@@ -5,5 +5,10 @@
   "main": "src/index.ts",
   "repository": "https://github.com/bradleybossard/imfs.git",
   "author": "Bradley Bossard <bradleybossard@gmail.com> (http://bradleybossard.com/)",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "27.0.6",
+    "tsc": "2.0.3"
+  }
 }
