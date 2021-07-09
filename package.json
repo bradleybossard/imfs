@@ -1,0 +1,9 @@
+{
+  "name": "imfs",
+  "version": "1.0.0",
+  "description": "An in-memory filesystem",
+  "main": "src/index.ts",
+  "repository": "https://github.com/bradleybossard/imfs.git",
+  "author": "Bradley Bossard <bradleybossard@gmail.com> (http://bradleybossard.com/)",
+  "license": "MIT"
+}
