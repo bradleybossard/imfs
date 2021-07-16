@@ -278,10 +278,12 @@ export default class Imfs {
   };
 
   /**
-   * Creates an empty file.  Throws an exception if the file or
-   * directory name already exists, or the proposed name does not
-   * meet the naming conventions.
+   * Creates an empty file in the present working directory, unless
+   * an absolute path is provided, in which case, it is created there.
+   * Throws an exception if the file or directory name already exists,
+   * or the proposed name does not meet the naming conventions.
    * @param filename The name of the file to create
+   * @param path Optional absolute path to directory to create file in
    *
    * Example:
    * ```typescript
@@ -293,11 +295,15 @@ export default class Imfs {
    * fs.touch('');  // Throws an exception
    * fs.touch('*');  // Throws an exception
    * fs.touch('x'.repeat(1000));  // Throws an exception
+   * fs.mkdir('bar');
+   * fs.cd('bar');
+   * fs.touch('goo', '/');
+   * console.log(fs.ls('/'));  // ['foo', 'goo']
    * ```
    */
-  touch = (filename: string): void => {
+  touch = (filename: string, path: string = ''): void => {
     this.validateName(filename);
-    const node = this.getDirectory();
+    const node = this.getDirectory(path);
     this.validateCreation(node, filename);
     node[filename] = '';
   };

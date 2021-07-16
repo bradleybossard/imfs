@@ -214,4 +214,14 @@ describe('absolute paths', () => {
     fs.cd('/test/test2');
     expect(fs.pwd()).toEqual('/test/test2');
   });
+
+  test('touch', () => {
+    const fs = new imfs();
+    fs.mkdir('test');
+    fs.cd('test');
+    fs.mkdir('test2');
+    fs.cd('/');
+    fs.touch('test3', '/test/test2');
+    expect(fs.ls('/test/test2')).toEqual(['test3']);
+  });
 });
