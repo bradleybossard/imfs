@@ -36,6 +36,13 @@ const invalidCharacters = (character: string) => {
   return `Proposed name contains invalid character: ${character}.`;
 };
 
+/**
+ * A class representing an in-memory filesystem.
+ *
+ * Limitations of the filesystem include the following:
+ * * File and directory names are limited to 256 characters  in length in length
+ * * File and directory names should avoid spaces/brackets/typical BASH operators for clarity
+ */
 export default class Imfs {
   /**
    * Root of nested objects representing the filesystem.
