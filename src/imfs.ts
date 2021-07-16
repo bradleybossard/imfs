@@ -239,9 +239,10 @@ export default class Imfs {
 
   /**
    * Change the present working directory.  The directory
-   * can be changed to either a child sub directory, or
-   * the parent directory.  Will throw an error if changing
-   * to the parent while already at root.
+   * can be changed to either a child sub directory,
+   * an absolute directory, or the parent directory.
+   * Throws an error if changing to the parent while
+   * already at root.
    * @param directory The directory to be changed to
    *
    * Example:
@@ -254,6 +255,10 @@ export default class Imfs {
    * fs.cd('..');
    * console.log(fs.pwd());  // '/'
    * fs.cd('..');  // Throws an exception
+   * fs.mkdir('bar');
+   * fs.cd('foo');
+   * fs.cd('/bar');
+   * console.log(fs.pwd());  // '/bar'
    * ```
    */
   cd = (directory: string): void => {
@@ -262,6 +267,8 @@ export default class Imfs {
         throw new Error(ERROR_PWD_ROOT);
       }
       this.currentPath.pop();
+    } else if (directory.startsWith('/')) {
+      this.currentPath = this.getAbsolutePath(directory);
     } else {
       const node = this.getDirectory();
       this.validateExistance(node, directory);

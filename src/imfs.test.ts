@@ -201,4 +201,17 @@ describe('absolute paths', () => {
     fs.mkdir('test4', '/test');
     expect(fs.ls('/test')).toEqual(['test2', 'test4']);
   });
+
+  test('cd', () => {
+    const fs = new imfs();
+    fs.mkdir('test');
+    fs.cd('test');
+    fs.mkdir('test2');
+    fs.cd('test2');
+    fs.mkdir('test3', '/');
+    fs.cd('/test3');
+    expect(fs.pwd()).toEqual('/test3');
+    fs.cd('/test/test2');
+    expect(fs.pwd()).toEqual('/test/test2');
+  });
 });
