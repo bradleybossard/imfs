@@ -237,4 +237,21 @@ describe('absolute paths', () => {
     expect(() => fs.read('/test/test3')).toThrow(/does not exist/);
     expect(() => fs.read('/')).toThrow(/does not exist/);
   });
+
+  test('write', () => {
+    const fs = new imfs();
+    fs.mkdir('test');
+    fs.cd('test');
+    fs.touch('test2');
+    fs.cd('/');
+    fs.write('/test/test2', 'some text');
+    expect(fs.read('/test/test2')).toEqual('some text');
+    expect(() => fs.write('/test2/test3', 'some text')).toThrow(
+      /contains non-existant/,
+    );
+    expect(() => fs.write('/test/test3', 'some text')).toThrow(
+      /does not exist/,
+    );
+    expect(() => fs.write('/', 'some text')).toThrow(/does not exist/);
+  });
 });

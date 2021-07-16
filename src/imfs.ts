@@ -366,8 +366,9 @@ export default class Imfs {
   };
 
   /**
-   * Writes a string to a file.  Throws an exception if the file
-   * does not exist.
+   * Writes a string to a file in the present working directory, unless
+   * an absolute path is provided, in which case, it is written there
+   * Throws an exception if the file does not exist.
    * @param filename The name of the file to write to
    * @param contents The contents to be written to the file
    *
@@ -379,10 +380,19 @@ export default class Imfs {
    * fs.write('foo', 'bar');
    * console.log(fs.read('foo'));  // 'bar'
    * fs.write('goo');  // Throws an exception
+   * fs.mkdir('bah');
+   * fs.cd('bah');
+   * fs.touch('baz');
+   * fs.cd('/');
+   * fs.write('/bah/baz', 'some text')
+   * console.log(fs.read('/bah/baz'));  // 'some text'
    * ```
    */
   write = (filename: string, contents: string): void => {
-    const node = this.getDirectory();
+    const isAbsolute = filename.startsWith('/');
+    const path = isAbsolute ? this.getDirectorySubPathFromPath(filename) : '';
+    filename = isAbsolute ? this.getFilenameFromPath(filename) : filename;
+    const node = this.getDirectory(path);
     this.validateExistance(node, filename);
     node[filename] = contents;
   };
