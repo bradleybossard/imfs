@@ -433,7 +433,8 @@ export default class Imfs {
   };
 
   /**
-   * Searches the present working directory for a given name.
+   * Searches the present working directory for a given name, unless
+   * an absolute path is provided, in which case, it is written there.
    * @param name The name to be searched for
    * @returns
    *
@@ -448,9 +449,14 @@ export default class Imfs {
    * console.log(fs.find('goo'));  // ['']
    * ```
    */
-  find = (name: string): string[] => {
-    const node = this.getDirectory();
-    return Object.keys(node).filter(key => key === name);
+  find = (searchPath: string = ''): string[] => {
+    const isAbsolute = searchPath.startsWith('/');
+    const path = isAbsolute ? this.getDirectorySubPathFromPath(searchPath) : '';
+    let searchTerm = isAbsolute
+      ? this.getFilenameFromPath(searchPath)
+      : searchPath;
+    const node = this.getDirectory(path);
+    return Object.keys(node).filter(key => key === searchTerm);
   };
 
   /**
