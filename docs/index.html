@@ -87,6 +87,18 @@
             </a>
             <p>A toy in-memory filesystem written in Typescript</p>
             <a
+              href="#documentation"
+              id="documentation"
+              style="color: inherit; text-decoration: none"
+            >
+              <h2>Documentation</h2>
+            </a>
+            <p>
+              Interactive documentation can be found in the
+              <code>docs</code> directory or online
+              <a href="https://bradleybossard.github.io/imfs/">here</a>
+            </p>
+            <a
               href="#install"
               id="install"
               style="color: inherit; text-decoration: none"
@@ -128,6 +140,45 @@
 <span style="color: #0000FF">undefined</span>
 <span style="color: #000000">&gt; </span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">ls</span><span style="color: #000000">()</span>
 <span style="color: #000000">[]</span>
+</code></pre>
+            <a
+              href="#notes-for-future-development"
+              id="notes-for-future-development"
+              style="color: inherit; text-decoration: none"
+            >
+              <h2>Notes for future development</h2>
+            </a>
+            <ul>
+              <li>
+                <p>
+                  Implementing a copy function would involve writing a helper
+                  function that would deeply clone an object at a src path and
+                  create a new key/value on the target object where key was
+                  taken from the src object and value is the deeply clone
+                  object.
+                </p>
+              </li>
+              <li>
+                <p>
+                  Implementing move could use the copy function above, then
+                  delete the previous object.
+                </p>
+              </li>
+              <li>
+                <p>
+                  To implement some advanced features such as permissions or
+                  symlinks, the code would have to be heavily reworked such that
+                  each node object implements a shape in the form of something
+                  like
+                </p>
+              </li>
+            </ul>
+            <pre><code class="language-typscript">{
+  type: &#39;directory&#39; | &#39;file&#39; | &#39;symlink&#39; | &#39;hardlink&#39;,
+  data: &lt;data of file&gt;,
+  owner &lt;owner&gt;,
+  permissions: &lt;permissions&gt;
+}
 </code></pre>
           </div>
         </div>
