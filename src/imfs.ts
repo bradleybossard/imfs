@@ -209,26 +209,30 @@ export default class Imfs {
   };
 
   /**
-   * Create a new directory in present working directory.  Will
-   * throw an error if a directory or file does not exist, or
-   * the proposed name does not meet the naming conventions.
+   * Creates a new directory.  Will use present working directory if path
+   * is not provided.  Throws an error if a directory or file does not
+   * exist, or the proposed name does not meet the naming conventions.
    * @param name The name of the directory to be created
+   * @param path Optional absolute path parameter to create directory in
    *
    * Example:
    * ```typescript
    * import imfs from './imfs';
    * const fs = new imfs();
    * fs.mkdir('foo');
-   * console.log(fs.ls());  // '['foo']'
+   * console.log(fs.ls());  // ['foo']
    * fs.mkdir('foo');  // Throws an exception
    * fs.mkdir('');  // Throws an exception
    * fs.mkdir('*');  // Throws an exception
    * fs.mkdir('x'.repeat(1000));  // Throws an exception
+   * fs.cd('foo');
+   * fs.mkdir('bar', '/');
+   * console.log(fs.ls('/'));  // ['foo', 'bar']
    * ```
    */
-  mkdir = (name: string): void => {
+  mkdir = (name: string, path: string = ''): void => {
     this.validateName(name);
-    const node = this.getDirectory();
+    const node = this.getDirectory(path);
     this.validateCreation(node, name);
     node[name] = {};
   };

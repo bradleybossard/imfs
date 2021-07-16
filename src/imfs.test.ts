@@ -189,4 +189,16 @@ describe('absolute paths', () => {
     expect(fs.ls('/test/ ')).toEqual(['test2']);
     expect(() => fs.ls('/test2')).toThrow(/contains non-existant/);
   });
+
+  test('mkdir', () => {
+    const fs = new imfs();
+    fs.mkdir('test');
+    fs.cd('test');
+    fs.mkdir('test2');
+    fs.cd('test2');
+    fs.mkdir('test3', '/');
+    expect(fs.ls('/')).toEqual(['test', 'test3']);
+    fs.mkdir('test4', '/test');
+    expect(fs.ls('/test')).toEqual(['test2', 'test4']);
+  });
 });
