@@ -312,4 +312,25 @@ export default class Imfs {
     this.validateExistance(node, name);
     delete node[name];
   };
+
+  /**
+   * Searches the present working directory for a given name.
+   * @param name The name to be searched for
+   * @returns
+   *
+   * Example:
+   * ```typescript
+   * import imfs from './imfs';
+   * const fs = new imfs();
+   * fs.mkdir('foo');
+   * fs.touch('bar');
+   * console.log(fs.find('foo'));  // ['foo']
+   * console.log(fs.find('bar'));  // ['bar']
+   * console.log(fs.find('goo'));  // ['']
+   * ```
+   */
+  find = (name: string): string[] => {
+    const node = this.getCurrentDirectory();
+    return Object.keys(node).filter(key => key === name);
+  };
 }

@@ -139,3 +139,24 @@ describe('rmdir', () => {
     expect(() => fs.rmdir('test')).toThrow(/does not exist/);
   });
 });
+
+describe('find', () => {
+  test('finds a file', () => {
+    const fs = new imfs();
+    fs.touch('test');
+    expect(fs.find('test')).toEqual(['test']);
+  });
+
+  test('finds a directory', () => {
+    const fs = new imfs();
+    fs.mkdir('test');
+    expect(fs.find('test')).toEqual(['test']);
+  });
+
+  test('finds nothing with non-matching search', () => {
+    const fs = new imfs();
+    fs.mkdir('test1');
+    fs.touch('test2');
+    expect(fs.find('test3')).toEqual([]);
+  });
+});
