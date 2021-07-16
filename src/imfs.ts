@@ -125,7 +125,8 @@ export default class Imfs {
     let result = this.fs;
     targetPath.forEach(entry => {
       if (!(entry in result)) {
-        // This should hopefully never happen
+        // TODO: This could happen if a user removes the
+        // directory they are currently in via rmdir(/absolute/path)
         throw new Error(ERROR_INTERNAL_PWD_CORRUPTED);
       }
       result = result[entry];
@@ -398,9 +399,10 @@ export default class Imfs {
   };
 
   /**
-   * Remove a directory.  Throws an exception if the directory
-   * does not exist.
-   * @param name The name of the directory to be removed
+   * Remove a directory from the present working directory, unless
+   * an absolute path is provided, in which case, it is written there.
+   * Throws an exception if the directory does not exist.
+   * @param directory The name of the directory to be removed
    *
    * Example:
    * ```typescript
@@ -411,12 +413,23 @@ export default class Imfs {
    * fs.rmdir('foo');
    * console.log(fs.ls());  // []
    * fs.rmdir('foo');  // Throws an exception
+   * fs.mkdir('foo');
+   * fs.cd('foo');
+   * fs.mkdir('bar');
+   * fs.cd('/');
+   * fs.rmdir('/foo/bar');
+   * console.log(fs.ls('/foo'));  // []
    * ```
    */
-  rmdir = (name: string): void => {
-    const node = this.getDirectory();
-    this.validateExistance(node, name);
-    delete node[name];
+  rmdir = (directory: string): void => {
+    const isAbsolute = directory.startsWith('/');
+    const path = isAbsolute ? this.getDirectorySubPathFromPath(directory) : '';
+    let directoryName = isAbsolute
+      ? this.getFilenameFromPath(directory)
+      : directory;
+    const node = this.getDirectory(path);
+    this.validateExistance(node, directoryName);
+    delete node[directoryName];
   };
 
   /**

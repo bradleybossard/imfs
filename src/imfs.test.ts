@@ -254,4 +254,15 @@ describe('absolute paths', () => {
     );
     expect(() => fs.write('/', 'some text')).toThrow(/does not exist/);
   });
+
+  test('rmdir', () => {
+    const fs = new imfs();
+    fs.mkdir('test');
+    fs.cd('test');
+    fs.mkdir('test2');
+    fs.cd('/');
+    fs.rmdir('/test/test2');
+    expect(fs.ls('/test')).toEqual([]);
+    expect(() => fs.rmdir('/test3')).toThrow(/does not exist/);
+  });
 });
