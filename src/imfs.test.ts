@@ -110,3 +110,17 @@ describe('read', () => {
     expect(() => fs.read('test')).toThrow(/non-file type/);
   });
 });
+
+describe('write', () => {
+  test('writes to a file', () => {
+    const fs = new imfs();
+    fs.touch('test');
+    fs.write('test', 'some text');
+    expect(fs.read('test')).toEqual('some text');
+  });
+
+  test('throws error when file does not exist', () => {
+    const fs = new imfs();
+    expect(() => fs.write('test', 'some text')).toThrow(/does not exist/);
+  });
+});

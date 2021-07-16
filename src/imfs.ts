@@ -268,4 +268,26 @@ export default class Imfs {
     this.validateTypeFile(node, filename);
     return node[filename];
   };
+
+  /**
+   * Writes a string to a file.  Throws an exception if the file
+   * does not exist.
+   * @param filename The name of the file to write to
+   * @param contents The contents to be written to the file
+   *
+   * Example:
+   * ```typescript
+   * import imfs from './imfs';
+   * const fs = new imfs();
+   * fs.touch('foo');
+   * fs.write('foo', 'bar');
+   * console.log(fs.read('foo'));  // 'bar'
+   * fs.write('goo');  // Throws an exception
+   * ```
+   */
+  write = (filename: string, contents: string): void => {
+    const node = this.getCurrentDirectory();
+    this.validateExistance(node, filename);
+    node[filename] = contents;
+  };
 }
