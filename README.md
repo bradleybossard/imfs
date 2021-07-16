@@ -43,3 +43,26 @@ undefined
 > fs.ls()
 []
 ```
+
+## Notes for future development
+
+- Implementing a copy function would involve writing a helper
+  function that would deeply clone an object at a src path and
+  create a new key/value on the target object where key was taken
+  from the src object and value is the deeply clone object.
+
+- Implementing move could use the copy function above, then delete
+  the previous object.
+
+- To implement some advanced features such as permissions or symlinks,
+  the code would have to be heavily reworked such that each node object
+  implements a shape in the form of something like
+
+```typscript
+{
+  type: 'directory' | 'file' | 'symlink' | 'hardlink',
+  data: <data of file>,
+  owner <owner>,
+  permissions: <permissions>
+}
+```
