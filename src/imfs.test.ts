@@ -124,3 +124,18 @@ describe('write', () => {
     expect(() => fs.write('test', 'some text')).toThrow(/does not exist/);
   });
 });
+
+describe('rmdir', () => {
+  test('removes a directory', () => {
+    const fs = new imfs();
+    fs.mkdir('test');
+    expect(fs.ls()).toEqual(['test']);
+    fs.rmdir('test');
+    expect(fs.ls()).toEqual([]);
+  });
+
+  test('throws error when directory does not exist', () => {
+    const fs = new imfs();
+    expect(() => fs.rmdir('test')).toThrow(/does not exist/);
+  });
+});

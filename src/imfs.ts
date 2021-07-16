@@ -290,4 +290,26 @@ export default class Imfs {
     this.validateExistance(node, filename);
     node[filename] = contents;
   };
+
+  /**
+   * Remove a directory.  Throws an exception if the directory
+   * does not exist.
+   * @param name The name of the directory to be removed
+   *
+   * Example:
+   * ```typescript
+   * import imfs from './imfs';
+   * const fs = new imfs();
+   * fs.mkdir('foo');
+   * console.log(fs.ls());  // ['foo']
+   * fs.rmdir('foo');
+   * console.log(fs.ls());  // []
+   * fs.rmdir('foo');  // Throws an exception
+   * ```
+   */
+  rmdir = (name: string): void => {
+    const node = this.getCurrentDirectory();
+    this.validateExistance(node, name);
+    delete node[name];
+  };
 }
