@@ -4,7 +4,7 @@ A toy in-memory filesystem written in Typescript
 
 ## Documentation
 
-Interactive documentation can be found in the `docs` directory.
+Interactive documentation can be found in the `docs` directory or online [here](https://bradleybossard.github.io/imfs/)
 
 ## Install
 
