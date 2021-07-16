@@ -72,3 +72,22 @@ describe('cd', () => {
     expect(() => fs.cd('test')).toThrow(/does not exist/);
   });
 });
+
+describe('touch', () => {
+  test('make a file', () => {
+    const fs = new imfs();
+    fs.touch('test');
+    expect(fs.ls()).toEqual(['test']);
+  });
+
+  test('throws error when name already exists', () => {
+    const fs = new imfs();
+    fs.touch('test');
+    expect(() => fs.touch('test')).toThrow(/name already exists/);
+  });
+
+  test('throws error when name is too long', () => {
+    const fs = new imfs();
+    expect(() => fs.touch(longString)).toThrow(/name too long/);
+  });
+});

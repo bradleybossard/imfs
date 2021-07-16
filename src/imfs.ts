@@ -208,4 +208,29 @@ export default class Imfs {
       this.currentPath.push(directory);
     }
   };
+
+  /**
+   * Creates an empty file.  Throws an exception if the file or
+   * directory name already exists, or the proposed name does not
+   * meet the naming conventions.
+   * @param filename The name of the file to create
+   *
+   * Example:
+   * ```typescript
+   * import imfs from './imfs';
+   * const fs = new imfs();
+   * fs.touch('foo');
+   * console.log(fs.ls());  // ['foo']
+   * fs.touch('foo');  // Throws an exception
+   * fs.touch('');  // Throws an exception
+   * fs.touch('*');  // Throws an exception
+   * fs.touch('x'.repeat(1000));  // Throws an exception
+   * ```
+   */
+  touch = (filename: string): void => {
+    this.validateName(filename);
+    const node = this.getCurrentDirectory();
+    this.validateCreation(node, filename);
+    node[filename] = '';
+  };
 }
