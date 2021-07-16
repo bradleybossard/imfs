@@ -89,6 +89,30 @@ export default class Imfs {
   };
 
   /**
+   * Returns the directory subpath of an absolute file path
+   * @internal
+   * @param filepath The absolute path to a file
+   * @returns An absolute path to the directory containing the file
+   */
+  protected getDirectorySubPathFromPath(filepath: string) {
+    const directories = filepath.trim().split('/');
+    directories.pop();
+    return `/${directories.join('/')}/`;
+  }
+
+  /**
+   * Returns the filename of an absolute file path
+   * @internal
+   * @param filepath The absolute path to a file
+   * @returns The filename contained in the filepath
+   */
+  protected getFilenameFromPath(filepath: string) {
+    const directories = filepath.trim().split('/');
+    const filename = directories.pop();
+    return filename !== undefined ? filename : '';
+  }
+
+  /**
    * Returns an object representing the current directory.
    * @internal
    */
@@ -309,8 +333,9 @@ export default class Imfs {
   };
 
   /**
-   * Read the contents of a file.  Throws an exception if
-   * the file does not exist.
+   * Read the contents of a file in the present working directory, unless
+   * an absolute path is provided, in which case, it is read from there.
+   * Throws an exception if the file does not exist.
    * @param filename The name of the file to be read
    * @returns A string containing the contents of the file.
    *
@@ -323,10 +348,18 @@ export default class Imfs {
    * fs.write('foo', 'bar');
    * console.log(fs.read('foo'));  // 'bar'
    * fs.read('goo');  // Throws an exception
+   * fs.mkdir('bah');
+   * fs.cd('bah');
+   * fs.touch('baz');
+   * fs.cd('/');
+   * console.log(fs.read('/bah/baz'));  // ''
    * ```
    */
   read = (filename: string): string => {
-    const node = this.getDirectory();
+    const isAbsolute = filename.startsWith('/');
+    const path = isAbsolute ? this.getDirectorySubPathFromPath(filename) : '';
+    filename = isAbsolute ? this.getFilenameFromPath(filename) : filename;
+    const node = this.getDirectory(path);
     this.validateExistance(node, filename);
     this.validateTypeFile(node, filename);
     return node[filename];
