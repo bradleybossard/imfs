@@ -172,3 +172,21 @@ describe('cls', () => {
     expect(fs.ls()).toEqual([]);
   });
 });
+
+describe('absolute paths', () => {
+  test('ls', () => {
+    const fs = new imfs();
+    fs.mkdir('test');
+    fs.cd('test');
+    fs.mkdir('test2');
+    fs.cd('test2');
+    expect(fs.ls('/')).toEqual(['test']);
+    fs.mkdir('test3');
+    fs.cd('test3');
+    expect(fs.ls('/test')).toEqual(['test2']);
+    expect(fs.ls('/test/')).toEqual(['test2']);
+    expect(fs.ls('/test//')).toEqual(['test2']);
+    expect(fs.ls('/test/ ')).toEqual(['test2']);
+    expect(() => fs.ls('/test2')).toThrow(/contains non-existant/);
+  });
+});

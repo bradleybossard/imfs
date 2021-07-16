@@ -31,6 +31,10 @@ const ERROR_PWD_ROOT = 'Current directory is root, cannot change to parent';
 const ERROR_NON_DIRECTORY_TYPE =
   'Can not perform operation on non-directory type.';
 const ERROR_NON_FILE_TYPE = 'Can not perform operation on non-file type.';
+const ERROR_ABSOLUTE_PATH_INVALID_CHARACTERS =
+  'Absolute path contains invalid characters';
+const ERROR_ABSOLUTE_PATH_DOES_NOT_EXIST =
+  'Absolute path contains non-existant sub-directories';
 
 const invalidCharacters = (character: string) => {
   return `Proposed name contains invalid character: ${character}.`;
@@ -57,19 +61,50 @@ export default class Imfs {
   protected currentPath: string[] = [];
 
   /**
+   * Validates that a path can be traversed, and if so, returns a
+   * corresponding stack of sub-directories that make up the path.
+   * @internal
+   * @param path The target path
+   * @returns An array of subdirectories if the path can be validated
+   */
+  protected getAbsolutePath = (path): string[] => {
+    const directories = path
+      .trim()
+      .split('/')
+      .filter(token => token !== '');
+    let result = this.fs;
+    directories.forEach(directory => {
+      INVALID_CHARACTERS.forEach(character => {
+        if (directory.includes(character)) {
+          throw new Error(ERROR_ABSOLUTE_PATH_INVALID_CHARACTERS);
+        }
+      });
+
+      if (!(directory in result)) {
+        throw new Error(ERROR_ABSOLUTE_PATH_DOES_NOT_EXIST);
+      }
+      result = result[directory];
+    });
+    return directories;
+  };
+
+  /**
    * Returns an object representing the current directory.
    * @internal
    */
-  protected getCurrentDirectory = (): Object => {
+  protected getDirectory = (path: string = ''): Object => {
+    let targetPath = this.currentPath;
+    if (path.startsWith('/')) {
+      const absolutePath = this.getAbsolutePath(path);
+      targetPath = absolutePath;
+    }
     let result = this.fs;
-    this.currentPath.forEach(entry => {
-      if (result !== {}) {
-        if (!(entry in result)) {
-          // This should hopefully never happen
-          throw new Error(ERROR_INTERNAL_PWD_CORRUPTED);
-        }
-        result = result[entry];
+    targetPath.forEach(entry => {
+      if (!(entry in result)) {
+        // This should hopefully never happen
+        throw new Error(ERROR_INTERNAL_PWD_CORRUPTED);
       }
+      result = result[entry];
     });
     return result;
   };
@@ -152,20 +187,24 @@ export default class Imfs {
 
   /**
    * List directory contents.
+   * @param path Optional parameter to show contents for an absolute path
    *
    * Example:
    * ```typescript
    * import imfs from './imfs';
    * const fs = new imfs();
-   * console.log(fs.ls());  // '[]'
+   * console.log(fs.ls());  // []
    * fs.mkdir('foo');
-   * console.log(fs.ls());  // '['foo']'
+   * console.log(fs.ls());  // ['foo']
    * fs.touch('bar');
-   * console.log(fs.ls());  // '['foo', 'bar']'
+   * console.log(fs.ls());  // ['foo', 'bar']
+   * fs.cd('foo');
+   * console.log(fs.ls());  // []
+   * console.log(fs.ls('/'));  // ['foo', 'bar']
    * ```
    */
-  ls = (): string[] => {
-    const node = this.getCurrentDirectory();
+  ls = (path: string = ''): string[] => {
+    const node = this.getDirectory(path);
     return Object.keys(node);
   };
 
@@ -189,7 +228,7 @@ export default class Imfs {
    */
   mkdir = (name: string): void => {
     this.validateName(name);
-    const node = this.getCurrentDirectory();
+    const node = this.getDirectory();
     this.validateCreation(node, name);
     node[name] = {};
   };
@@ -220,7 +259,7 @@ export default class Imfs {
       }
       this.currentPath.pop();
     } else {
-      const node = this.getCurrentDirectory();
+      const node = this.getDirectory();
       this.validateExistance(node, directory);
       this.validateTypeDirectory(node, directory);
       this.currentPath.push(directory);
@@ -247,7 +286,7 @@ export default class Imfs {
    */
   touch = (filename: string): void => {
     this.validateName(filename);
-    const node = this.getCurrentDirectory();
+    const node = this.getDirectory();
     this.validateCreation(node, filename);
     node[filename] = '';
   };
@@ -270,7 +309,7 @@ export default class Imfs {
    * ```
    */
   read = (filename: string): string => {
-    const node = this.getCurrentDirectory();
+    const node = this.getDirectory();
     this.validateExistance(node, filename);
     this.validateTypeFile(node, filename);
     return node[filename];
@@ -293,7 +332,7 @@ export default class Imfs {
    * ```
    */
   write = (filename: string, contents: string): void => {
-    const node = this.getCurrentDirectory();
+    const node = this.getDirectory();
     this.validateExistance(node, filename);
     node[filename] = contents;
   };
@@ -315,7 +354,7 @@ export default class Imfs {
    * ```
    */
   rmdir = (name: string): void => {
-    const node = this.getCurrentDirectory();
+    const node = this.getDirectory();
     this.validateExistance(node, name);
     delete node[name];
   };
@@ -337,7 +376,7 @@ export default class Imfs {
    * ```
    */
   find = (name: string): string[] => {
-    const node = this.getCurrentDirectory();
+    const node = this.getDirectory();
     return Object.keys(node).filter(key => key === name);
   };
 
