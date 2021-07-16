@@ -44,3 +44,31 @@ describe('mkdir', () => {
     expect(() => fs.mkdir('*')).toThrow(/invalid character/);
   });
 });
+
+describe('cd', () => {
+  test('successfully changes directory', () => {
+    const fs = new imfs();
+    fs.mkdir('test');
+    fs.cd('test');
+    expect(fs.pwd()).toEqual('/test');
+  });
+
+  test('successfully changes to nested directories', () => {
+    const fs = new imfs();
+    fs.mkdir('test');
+    fs.cd('test');
+    fs.mkdir('test2');
+    fs.cd('test2');
+    expect(fs.pwd()).toEqual('/test/test2');
+  });
+
+  test('throws error when changing to parent while root', () => {
+    const fs = new imfs();
+    expect(() => fs.cd('..')).toThrow(/Current directory is root/);
+  });
+
+  test('throws error when changing to non-existance directory', () => {
+    const fs = new imfs();
+    expect(() => fs.cd('test')).toThrow(/does not exist/);
+  });
+});

@@ -26,6 +26,10 @@ const ERROR_NAME_TOO_SHORT =
   'Proposed name too short, must be at least one character';
 const ERROR_NAME_TOO_LONG = `Proposed name too long. Must be 1-${MAX_NAME_LENGTH} characters.`;
 const ERROR_NAME_ALREADY_EXISTS = 'Proposed name already exists';
+const ERROR_NAME_DOES_NOT_EXIST = 'Proposed name does not exist';
+const ERROR_PWD_ROOT = 'Current directory is root, cannot change to parent';
+const ERROR_NON_DIRECTORY_TYPE =
+  'Can not perform operation on non-directory type.';
 
 const invalidCharacters = (character: string) => {
   return `Proposed name contains invalid character: ${character}.`;
@@ -92,6 +96,26 @@ export default class Imfs {
   };
 
   /**
+   * Validates that a new file or directory exists on a given node.
+   * @internal
+   */
+  protected validateExistance = (node: Object, name: string): void => {
+    if (!(name in node)) {
+      throw new Error(ERROR_NAME_DOES_NOT_EXIST);
+    }
+  };
+
+  /**
+   * Validates that a name in a directory is of type directory.
+   * @internal
+   */
+  protected validateTypeDirectory = (node: Object, name: string): void => {
+    if (typeof node[name] !== 'object' || node[name] === null) {
+      throw new Error(ERROR_NON_DIRECTORY_TYPE);
+    }
+  };
+
+  /**
    * Returns the present working directory.
    *
    * Example:
@@ -150,5 +174,38 @@ export default class Imfs {
     const node = this.getCurrentDirectory();
     this.validateCreation(node, name);
     node[name] = {};
+  };
+
+  /**
+   * Change the present working directory.  The directory
+   * can be changed to either a child sub directory, or
+   * the parent directory.  Will throw an error if changing
+   * to the parent while already at root.
+   * @param directory The directory to be changed to
+   *
+   * Example:
+   * ```typescript
+   * import imfs from './imfs';
+   * const fs = new imfs();
+   * fs.mkdir('foo');
+   * fs.cd('foo');
+   * console.log(fs.pwd());  // '/foo'
+   * fs.cd('..');
+   * console.log(fs.pwd());  // '/'
+   * fs.cd('..');  // Throws an exception
+   * ```
+   */
+  cd = (directory: string): void => {
+    if (directory === '..') {
+      if (this.currentPath.length === 0) {
+        throw new Error(ERROR_PWD_ROOT);
+      }
+      this.currentPath.pop();
+    } else {
+      const node = this.getCurrentDirectory();
+      this.validateExistance(node, directory);
+      this.validateTypeDirectory(node, directory);
+      this.currentPath.push(directory);
+    }
   };
 }
