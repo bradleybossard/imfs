@@ -91,3 +91,22 @@ describe('touch', () => {
     expect(() => fs.touch(longString)).toThrow(/name too long/);
   });
 });
+
+describe('read', () => {
+  test('read from a file', () => {
+    const fs = new imfs();
+    fs.touch('test');
+    expect(fs.read('test')).toEqual('');
+  });
+
+  test('throws error when file does not exist', () => {
+    const fs = new imfs();
+    expect(() => fs.read('test')).toThrow(/does not exist/);
+  });
+
+  test('throws error when file is not type file', () => {
+    const fs = new imfs();
+    fs.mkdir('test');
+    expect(() => fs.read('test')).toThrow(/non-file type/);
+  });
+});

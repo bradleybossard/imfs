@@ -30,6 +30,7 @@ const ERROR_NAME_DOES_NOT_EXIST = 'Proposed name does not exist';
 const ERROR_PWD_ROOT = 'Current directory is root, cannot change to parent';
 const ERROR_NON_DIRECTORY_TYPE =
   'Can not perform operation on non-directory type.';
+const ERROR_NON_FILE_TYPE = 'Can not perform operation on non-file type.';
 
 const invalidCharacters = (character: string) => {
   return `Proposed name contains invalid character: ${character}.`;
@@ -112,6 +113,16 @@ export default class Imfs {
   protected validateTypeDirectory = (node: Object, name: string): void => {
     if (typeof node[name] !== 'object' || node[name] === null) {
       throw new Error(ERROR_NON_DIRECTORY_TYPE);
+    }
+  };
+
+  /**
+   * Validates that a name in a directory is of type file.
+   * @internal
+   */
+  protected validateTypeFile = (node: Object, name: string): void => {
+    if (typeof node[name] !== 'string') {
+      throw new Error(ERROR_NON_FILE_TYPE);
     }
   };
 
@@ -232,5 +243,29 @@ export default class Imfs {
     const node = this.getCurrentDirectory();
     this.validateCreation(node, filename);
     node[filename] = '';
+  };
+
+  /**
+   * Read the contents of a file.  Throws an exception if
+   * the file does not exist.
+   * @param filename The name of the file to be read
+   * @returns A string containing the contents of the file.
+   *
+   * Example:
+   * ```typescript
+   * import imfs from './imfs';
+   * const fs = new imfs();
+   * fs.touch('foo');
+   * console.log(fs.read('foo'));  // ''
+   * fs.write('foo', 'bar');
+   * console.log(fs.read('foo'));  // 'bar'
+   * fs.read('goo');  // Throws an exception
+   * ```
+   */
+  read = (filename: string): string => {
+    const node = this.getCurrentDirectory();
+    this.validateExistance(node, filename);
+    this.validateTypeFile(node, filename);
+    return node[filename];
   };
 }
