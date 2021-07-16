@@ -85,6 +85,24 @@
     <div class="container container-main">
       <div class="row">
         <div class="col-8 col-content">
+          <section class="tsd-panel tsd-comment">
+            <div class="tsd-comment tsd-typography">
+              <div class="lead">
+                <p>A class representing an in-memory filesystem.</p>
+              </div>
+              <p>Limitations of the filesystem include the following:</p>
+              <ul>
+                <li>
+                  File and directory names are limited to 256 characters in
+                  length in length
+                </li>
+                <li>
+                  File and directory names should avoid spaces/brackets/typical
+                  BASH operators for clarity
+                </li>
+              </ul>
+            </div>
+          </section>
           <section class="tsd-panel tsd-hierarchy">
             <h3>Hierarchy</h3>
             <ul class="tsd-hierarchy">
@@ -220,8 +238,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/bradleybossard/imfs/blob/b6b18f9/src/imfs.ts#L209"
-                          >imfs.ts:209</a
+                          href="https://github.com/bradleybossard/imfs/blob/41e902c/src/imfs.ts#L289"
+                          >imfs.ts:289</a
                         >
                       </li>
                     </ul>
@@ -230,9 +248,9 @@
                     <div class="lead">
                       <p>
                         Change the present working directory. The directory can
-                        be changed to either a child sub directory, or the
-                        parent directory. Will throw an error if changing to the
-                        parent while already at root.
+                        be changed to either a child sub directory, an absolute
+                        directory, or the parent directory. Throws an error if
+                        changing to the parent while already at root.
                       </p>
                     </div>
                   </div>
@@ -254,6 +272,10 @@
 <span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">cd</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;..&#039;</span><span style="color: #000000">);</span>
 <span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">pwd</span><span style="color: #000000">());  </span><span style="color: #008000">// &#039;/&#039;</span>
 <span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">cd</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;..&#039;</span><span style="color: #000000">);  </span><span style="color: #008000">// Throws an exception</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">mkdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;bar&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">cd</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;foo&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">cd</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;/bar&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">pwd</span><span style="color: #000000">());  </span><span style="color: #008000">// &#039;/bar&#039;</span>
 </code></pre>
                       </div>
                     </li>
@@ -284,8 +306,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/bradleybossard/imfs/blob/b6b18f9/src/imfs.ts#L353"
-                          >imfs.ts:353</a
+                          href="https://github.com/bradleybossard/imfs/blob/41e902c/src/imfs.ts#L478"
+                          >imfs.ts:478</a
                         >
                       </li>
                     </ul>
@@ -319,9 +341,9 @@
               <h3>find</h3>
               <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
                 <li class="tsd-signature tsd-kind-icon">
-                  find<span class="tsd-signature-symbol">(</span>name<span
+                  find<span class="tsd-signature-symbol">(</span>searchPath<span
                     class="tsd-signature-symbol"
-                    >: </span
+                    >?: </span
                   ><span class="tsd-signature-type">string</span
                   ><span class="tsd-signature-symbol">)</span
                   ><span class="tsd-signature-symbol">: </span
@@ -336,8 +358,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/bradleybossard/imfs/blob/b6b18f9/src/imfs.ts#L332"
-                          >imfs.ts:332</a
+                          href="https://github.com/bradleybossard/imfs/blob/41e902c/src/imfs.ts#L452"
+                          >imfs.ts:452</a
                         >
                       </li>
                     </ul>
@@ -345,7 +367,9 @@
                   <div class="tsd-comment tsd-typography">
                     <div class="lead">
                       <p>
-                        Searches the present working directory for a given name.
+                        Searches the present working directory for a given name,
+                        unless an absolute path is provided, in which case, it
+                        is written there.
                       </p>
                     </div>
                   </div>
@@ -353,11 +377,12 @@
                   <ul class="tsd-parameters">
                     <li>
                       <h5>
-                        name: <span class="tsd-signature-type">string</span>
+                        searchPath:
+                        <span class="tsd-signature-type">string</span
+                        ><span class="tsd-signature-symbol">
+                          = &#x27;&#x27;</span
+                        >
                       </h5>
-                      <div class="tsd-comment tsd-typography">
-                        <p>The name to be searched for</p>
-                      </div>
                     </li>
                   </ul>
                   <h4 class="tsd-returns-title">
@@ -383,7 +408,10 @@
               <h3>ls</h3>
               <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
                 <li class="tsd-signature tsd-kind-icon">
-                  ls<span class="tsd-signature-symbol">(</span
+                  ls<span class="tsd-signature-symbol">(</span>path<span
+                    class="tsd-signature-symbol"
+                    >?: </span
+                  ><span class="tsd-signature-type">string</span
                   ><span class="tsd-signature-symbol">)</span
                   ><span class="tsd-signature-symbol">: </span
                   ><span class="tsd-signature-type">string</span
@@ -397,8 +425,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/bradleybossard/imfs/blob/b6b18f9/src/imfs.ts#L160"
-                          >imfs.ts:160</a
+                          href="https://github.com/bradleybossard/imfs/blob/41e902c/src/imfs.ts#L231"
+                          >imfs.ts:231</a
                         >
                       </li>
                     </ul>
@@ -407,16 +435,36 @@
                     <div class="lead">
                       <p>List directory contents.</p>
                     </div>
-                    <p>Example:</p>
-                    <pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">imfs</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;./imfs&#039;</span><span style="color: #000000">;</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">fs</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">imfs</span><span style="color: #000000">();</span>
-<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">ls</span><span style="color: #000000">());  </span><span style="color: #008000">// &#039;[]&#039;</span>
-<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">mkdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;foo&#039;</span><span style="color: #000000">);</span>
-<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">ls</span><span style="color: #000000">());  </span><span style="color: #008000">// &#039;[&#039;foo&#039;]&#039;</span>
-<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">touch</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;bar&#039;</span><span style="color: #000000">);</span>
-<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">ls</span><span style="color: #000000">());  </span><span style="color: #008000">// &#039;[&#039;foo&#039;, &#039;bar&#039;]&#039;</span>
-</code></pre>
                   </div>
+                  <h4 class="tsd-parameters-title">Parameters</h4>
+                  <ul class="tsd-parameters">
+                    <li>
+                      <h5>
+                        path: <span class="tsd-signature-type">string</span
+                        ><span class="tsd-signature-symbol">
+                          = &#x27;&#x27;</span
+                        >
+                      </h5>
+                      <div class="tsd-comment tsd-typography">
+                        <p>
+                          Optional parameter to show contents for an absolute
+                          path
+                        </p>
+                        <p>Example:</p>
+                        <pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">imfs</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;./imfs&#039;</span><span style="color: #000000">;</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">fs</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">imfs</span><span style="color: #000000">();</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">ls</span><span style="color: #000000">());  </span><span style="color: #008000">// []</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">mkdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;foo&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">ls</span><span style="color: #000000">());  </span><span style="color: #008000">// [&#039;foo&#039;]</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">touch</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;bar&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">ls</span><span style="color: #000000">());  </span><span style="color: #008000">// [&#039;foo&#039;, &#039;bar&#039;]</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">cd</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;foo&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">ls</span><span style="color: #000000">());  </span><span style="color: #008000">// []</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">ls</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;/&#039;</span><span style="color: #000000">));  </span><span style="color: #008000">// [&#039;foo&#039;, &#039;bar&#039;]</span>
+</code></pre>
+                      </div>
+                    </li>
+                  </ul>
                   <h4 class="tsd-returns-title">
                     Returns <span class="tsd-signature-type">string</span
                     ><span class="tsd-signature-symbol">[]</span>
@@ -434,6 +482,9 @@
                   mkdir<span class="tsd-signature-symbol">(</span>name<span
                     class="tsd-signature-symbol"
                     >: </span
+                  ><span class="tsd-signature-type">string</span>, path<span
+                    class="tsd-signature-symbol"
+                    >?: </span
                   ><span class="tsd-signature-type">string</span
                   ><span class="tsd-signature-symbol">)</span
                   ><span class="tsd-signature-symbol">: </span
@@ -447,8 +498,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/bradleybossard/imfs/blob/b6b18f9/src/imfs.ts#L183"
-                          >imfs.ts:183</a
+                          href="https://github.com/bradleybossard/imfs/blob/41e902c/src/imfs.ts#L258"
+                          >imfs.ts:258</a
                         >
                       </li>
                     </ul>
@@ -456,10 +507,10 @@
                   <div class="tsd-comment tsd-typography">
                     <div class="lead">
                       <p>
-                        Create a new directory in present working directory.
-                        Will throw an error if a directory or file does not
-                        exist, or the proposed name does not meet the naming
-                        conventions.
+                        Creates a new directory. Will use present working
+                        directory if path is not provided. Throws an error if a
+                        directory or file does not exist, or the proposed name
+                        does not meet the naming conventions.
                       </p>
                     </div>
                   </div>
@@ -471,15 +522,32 @@
                       </h5>
                       <div class="tsd-comment tsd-typography">
                         <p>The name of the directory to be created</p>
+                      </div>
+                    </li>
+                    <li>
+                      <h5>
+                        path: <span class="tsd-signature-type">string</span
+                        ><span class="tsd-signature-symbol">
+                          = &#x27;&#x27;</span
+                        >
+                      </h5>
+                      <div class="tsd-comment tsd-typography">
+                        <p>
+                          Optional absolute path parameter to create directory
+                          in
+                        </p>
                         <p>Example:</p>
                         <pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">imfs</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;./imfs&#039;</span><span style="color: #000000">;</span>
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">fs</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">imfs</span><span style="color: #000000">();</span>
 <span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">mkdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;foo&#039;</span><span style="color: #000000">);</span>
-<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">ls</span><span style="color: #000000">());  </span><span style="color: #008000">// &#039;[&#039;foo&#039;]&#039;</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">ls</span><span style="color: #000000">());  </span><span style="color: #008000">// [&#039;foo&#039;]</span>
 <span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">mkdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;foo&#039;</span><span style="color: #000000">);  </span><span style="color: #008000">// Throws an exception</span>
 <span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">mkdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;&#039;</span><span style="color: #000000">);  </span><span style="color: #008000">// Throws an exception</span>
 <span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">mkdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;*&#039;</span><span style="color: #000000">);  </span><span style="color: #008000">// Throws an exception</span>
 <span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">mkdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;x&#039;</span><span style="color: #000000">.</span><span style="color: #795E26">repeat</span><span style="color: #000000">(</span><span style="color: #098658">1000</span><span style="color: #000000">));  </span><span style="color: #008000">// Throws an exception</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">cd</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;foo&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">mkdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;bar&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;/&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">ls</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;/&#039;</span><span style="color: #000000">));  </span><span style="color: #008000">// [&#039;foo&#039;, &#039;bar&#039;]</span>
 </code></pre>
                       </div>
                     </li>
@@ -510,8 +578,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/bradleybossard/imfs/blob/b6b18f9/src/imfs.ts#L142"
-                          >imfs.ts:142</a
+                          href="https://github.com/bradleybossard/imfs/blob/41e902c/src/imfs.ts#L209"
+                          >imfs.ts:209</a
                         >
                       </li>
                     </ul>
@@ -558,8 +626,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/bradleybossard/imfs/blob/b6b18f9/src/imfs.ts#L265"
-                          >imfs.ts:265</a
+                          href="https://github.com/bradleybossard/imfs/blob/41e902c/src/imfs.ts#L359"
+                          >imfs.ts:359</a
                         >
                       </li>
                     </ul>
@@ -567,7 +635,9 @@
                   <div class="tsd-comment tsd-typography">
                     <div class="lead">
                       <p>
-                        Read the contents of a file. Throws an exception if the
+                        Read the contents of a file in the present working
+                        directory, unless an absolute path is provided, in which
+                        case, it is read from there. Throws an exception if the
                         file does not exist.
                       </p>
                     </div>
@@ -595,6 +665,11 @@
 <span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">write</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;foo&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;bar&#039;</span><span style="color: #000000">);</span>
 <span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">read</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;foo&#039;</span><span style="color: #000000">));  </span><span style="color: #008000">// &#039;bar&#039;</span>
 <span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">read</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;goo&#039;</span><span style="color: #000000">);  </span><span style="color: #008000">// Throws an exception</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">mkdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;bah&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">cd</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;bah&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">touch</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;baz&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">cd</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;/&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">read</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;/bah/baz&#039;</span><span style="color: #000000">));  </span><span style="color: #008000">// &#039;&#039;</span>
 </code></pre>
                 </li>
               </ul>
@@ -606,7 +681,7 @@
               <h3>rmdir</h3>
               <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
                 <li class="tsd-signature tsd-kind-icon">
-                  rmdir<span class="tsd-signature-symbol">(</span>name<span
+                  rmdir<span class="tsd-signature-symbol">(</span>directory<span
                     class="tsd-signature-symbol"
                     >: </span
                   ><span class="tsd-signature-type">string</span
@@ -622,8 +697,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/bradleybossard/imfs/blob/b6b18f9/src/imfs.ts#L310"
-                          >imfs.ts:310</a
+                          href="https://github.com/bradleybossard/imfs/blob/41e902c/src/imfs.ts#L424"
+                          >imfs.ts:424</a
                         >
                       </li>
                     </ul>
@@ -631,7 +706,9 @@
                   <div class="tsd-comment tsd-typography">
                     <div class="lead">
                       <p>
-                        Remove a directory. Throws an exception if the directory
+                        Remove a directory from the present working directory,
+                        unless an absolute path is provided, in which case, it
+                        is written there. Throws an exception if the directory
                         does not exist.
                       </p>
                     </div>
@@ -640,7 +717,8 @@
                   <ul class="tsd-parameters">
                     <li>
                       <h5>
-                        name: <span class="tsd-signature-type">string</span>
+                        directory:
+                        <span class="tsd-signature-type">string</span>
                       </h5>
                       <div class="tsd-comment tsd-typography">
                         <p>The name of the directory to be removed</p>
@@ -652,6 +730,12 @@
 <span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">rmdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;foo&#039;</span><span style="color: #000000">);</span>
 <span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">ls</span><span style="color: #000000">());  </span><span style="color: #008000">// []</span>
 <span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">rmdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;foo&#039;</span><span style="color: #000000">);  </span><span style="color: #008000">// Throws an exception</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">mkdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;foo&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">cd</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;foo&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">mkdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;bar&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">cd</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;/&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">rmdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;/foo/bar&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">ls</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;/foo&#039;</span><span style="color: #000000">));  </span><span style="color: #008000">// []</span>
 </code></pre>
                       </div>
                     </li>
@@ -672,6 +756,9 @@
                   touch<span class="tsd-signature-symbol">(</span>filename<span
                     class="tsd-signature-symbol"
                     >: </span
+                  ><span class="tsd-signature-type">string</span>, path<span
+                    class="tsd-signature-symbol"
+                    >?: </span
                   ><span class="tsd-signature-type">string</span
                   ><span class="tsd-signature-symbol">)</span
                   ><span class="tsd-signature-symbol">: </span
@@ -685,8 +772,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/bradleybossard/imfs/blob/b6b18f9/src/imfs.ts#L241"
-                          >imfs.ts:241</a
+                          href="https://github.com/bradleybossard/imfs/blob/41e902c/src/imfs.ts#L329"
+                          >imfs.ts:329</a
                         >
                       </li>
                     </ul>
@@ -694,9 +781,11 @@
                   <div class="tsd-comment tsd-typography">
                     <div class="lead">
                       <p>
-                        Creates an empty file. Throws an exception if the file
-                        or directory name already exists, or the proposed name
-                        does not meet the naming conventions.
+                        Creates an empty file in the present working directory,
+                        unless an absolute path is provided, in which case, it
+                        is created there. Throws an exception if the file or
+                        directory name already exists, or the proposed name does
+                        not meet the naming conventions.
                       </p>
                     </div>
                   </div>
@@ -708,6 +797,19 @@
                       </h5>
                       <div class="tsd-comment tsd-typography">
                         <p>The name of the file to create</p>
+                      </div>
+                    </li>
+                    <li>
+                      <h5>
+                        path: <span class="tsd-signature-type">string</span
+                        ><span class="tsd-signature-symbol">
+                          = &#x27;&#x27;</span
+                        >
+                      </h5>
+                      <div class="tsd-comment tsd-typography">
+                        <p>
+                          Optional absolute path to directory to create file in
+                        </p>
                         <p>Example:</p>
                         <pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">imfs</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;./imfs&#039;</span><span style="color: #000000">;</span>
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">fs</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">imfs</span><span style="color: #000000">();</span>
@@ -717,6 +819,10 @@
 <span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">touch</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;&#039;</span><span style="color: #000000">);  </span><span style="color: #008000">// Throws an exception</span>
 <span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">touch</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;*&#039;</span><span style="color: #000000">);  </span><span style="color: #008000">// Throws an exception</span>
 <span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">touch</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;x&#039;</span><span style="color: #000000">.</span><span style="color: #795E26">repeat</span><span style="color: #000000">(</span><span style="color: #098658">1000</span><span style="color: #000000">));  </span><span style="color: #008000">// Throws an exception</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">mkdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;bar&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">cd</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;bar&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">touch</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;goo&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;/&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">ls</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;/&#039;</span><span style="color: #000000">));  </span><span style="color: #008000">// [&#039;foo&#039;, &#039;goo&#039;]</span>
 </code></pre>
                       </div>
                     </li>
@@ -753,8 +859,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/bradleybossard/imfs/blob/b6b18f9/src/imfs.ts#L288"
-                          >imfs.ts:288</a
+                          href="https://github.com/bradleybossard/imfs/blob/41e902c/src/imfs.ts#L392"
+                          >imfs.ts:392</a
                         >
                       </li>
                     </ul>
@@ -762,7 +868,9 @@
                   <div class="tsd-comment tsd-typography">
                     <div class="lead">
                       <p>
-                        Writes a string to a file. Throws an exception if the
+                        Writes a string to a file in the present working
+                        directory, unless an absolute path is provided, in which
+                        case, it is written there Throws an exception if the
                         file does not exist.
                       </p>
                     </div>
@@ -790,6 +898,12 @@
 <span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">write</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;foo&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;bar&#039;</span><span style="color: #000000">);</span>
 <span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">read</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;foo&#039;</span><span style="color: #000000">));  </span><span style="color: #008000">// &#039;bar&#039;</span>
 <span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">write</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;goo&#039;</span><span style="color: #000000">);  </span><span style="color: #008000">// Throws an exception</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">mkdir</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;bah&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">cd</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;bah&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">touch</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;baz&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">cd</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;/&#039;</span><span style="color: #000000">);</span>
+<span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">write</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;/bah/baz&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;some text&#039;</span><span style="color: #000000">)</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">read</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;/bah/baz&#039;</span><span style="color: #000000">));  </span><span style="color: #008000">// &#039;some text&#039;</span>
 </code></pre>
                       </div>
                     </li>
