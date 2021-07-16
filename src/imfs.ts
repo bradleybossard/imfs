@@ -333,4 +333,25 @@ export default class Imfs {
     const node = this.getCurrentDirectory();
     return Object.keys(node).filter(key => key === name);
   };
+
+  /**
+   * Resets an entire filesystem.
+   *
+   * Example:
+   * ```typescript
+   * import imfs from './imfs';
+   * const fs = new imfs();
+   * fs.mkdir('foo');
+   * console.log(fs.ls());   // ['foo']
+   * fs.cd('foo');
+   * console.log(fs.pwd());  // '/foo'
+   * fs.cls();
+   * console.log(fs.ls());   // []
+   * console.log(fs.pwd());  // '/'
+   * ```
+   */
+  cls = (): void => {
+    this.fs = {};
+    this.currentPath = [];
+  };
 }

@@ -160,3 +160,15 @@ describe('find', () => {
     expect(fs.find('test3')).toEqual([]);
   });
 });
+
+describe('cls', () => {
+  test('clears the filesystem', () => {
+    const fs = new imfs();
+    fs.mkdir('test');
+    fs.cd('test');
+    expect(fs.pwd()).toEqual('/test');
+    fs.cls();
+    expect(fs.pwd()).toEqual('/');
+    expect(fs.ls()).toEqual([]);
+  });
+});
